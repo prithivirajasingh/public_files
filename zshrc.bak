@@ -231,6 +231,7 @@ plugins=(
     zsh-syntax-highlighting
     )
 
+source $ZSH/oh-my-zsh.sh
 
 # custom environment variables
 if [ -f /etc/custom.env ]; then
