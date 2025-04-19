@@ -235,7 +235,7 @@ source $ZSH/oh-my-zsh.sh
 
 # custom environment variables
 if [ -f /etc/custom.env ]; then
-  source /etc/custom.env
+  export $(grep -v '^#' /etc/custom.env | xargs)
 fi
 
 
