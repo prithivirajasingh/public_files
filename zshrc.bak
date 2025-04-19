@@ -231,8 +231,6 @@ plugins=(
     zsh-syntax-highlighting
     )
 
-source $ZSH/oh-my-zsh.sh
-
 
 # custom aliases
 alias su='sudo su -'
