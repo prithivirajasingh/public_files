@@ -6,14 +6,15 @@ import subprocess
 import schedule
 import time
 import ipaddress
+import os
 
 # Configure which IPs should be updated
 IPV4_UPDATE = True
 IPV6_UPDATE = True
 
 # 🔹 Configure your Cloudflare details
-CLOUDFLARE_API_TOKEN = ""  # 🔹 Find details in private repo PycharmProjects/python_cloudflare_dns_update
-ZONE_ID = ""  # 🔹 Find details in private repo PycharmProjects/python_cloudflare_dns_update
+CLOUDFLARE_API_TOKEN = os.getenv("CLOUDFLARE_API_TOKEN")  # Refer python_confidential_environment/custom.env
+CLOUDFLARE_ZONE_ID = os.getenv("CLOUDFLARE_ZONE_ID")  # Refer python_confidential_environment/custom.env
 SUBDOMAIN = subprocess.getoutput("hostname").strip() + ".prithivirajasingh.com"
 
 
@@ -65,7 +66,7 @@ def get_ipv6():
 
 def get_cloudflare_dns_record(record_type):
     """Fetches the existing Cloudflare DNS record for the subdomain."""
-    url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records?type={record_type}&name={SUBDOMAIN}"
+    url = f"https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/dns_records?type={record_type}&name={SUBDOMAIN}"
     headers = {"Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}", "Content-Type": "application/json"}
 
     response = requests.get(url, headers=headers)
@@ -77,7 +78,7 @@ def get_cloudflare_dns_record(record_type):
 
 def update_cloudflare_dns(record_id, record_type, new_ip):
     """Updates Cloudflare DNS record if IP is different."""
-    url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records/{record_id}"
+    url = f"https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/dns_records/{record_id}"
     headers = {"Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}", "Content-Type": "application/json"}
     data = {"type": record_type, "name": SUBDOMAIN, "content": new_ip, "ttl": 1, "proxied": False}
 
@@ -87,7 +88,7 @@ def update_cloudflare_dns(record_id, record_type, new_ip):
 
 def create_cloudflare_dns(record_type, new_ip):
     """Creates a new Cloudflare DNS record if none exists."""
-    url = f"https://api.cloudflare.com/client/v4/zones/{ZONE_ID}/dns_records"
+    url = f"https://api.cloudflare.com/client/v4/zones/{CLOUDFLARE_ZONE_ID}/dns_records"
     headers = {"Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}", "Content-Type": "application/json"}
     data = {"type": record_type, "name": SUBDOMAIN, "content": new_ip, "ttl": 1, "proxied": False}
 
